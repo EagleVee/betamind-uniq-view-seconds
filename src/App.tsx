@@ -1,26 +1,39 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import useUniqViewSeconds from './hooks/useUniqViewSeconds';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { viewSeconds, error, isFetchingViewSeconds, fetchData } = useUniqViewSeconds({
+        shouldFetchInitially: false,
+    });
+
+    const renderResult = () => {
+        return <code className="App-view-seconds">{viewSeconds.join(', ')}</code>;
+    };
+
+    const renderError = () => {
+        return <code className="App-view-seconds">{error}</code>;
+    };
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                {isFetchingViewSeconds ? (
+                    <img src={logo} className="App-logo" alt="logo" />
+                ) : error ? (
+                    renderError()
+                ) : (
+                    renderResult()
+                )}
+                <div
+                    className={`App-fetch-btn ${isFetchingViewSeconds && 'App-fetch-btn-disabled'}`}
+                    onClick={fetchData}>
+                    {viewSeconds.length ? 'Refetch data' : 'Click to fetch data'}
+                </div>
+            </header>
+        </div>
+    );
 }
 
 export default App;
