@@ -56,7 +56,7 @@ describe('useUniqViewSeconds', () => {
         expect(result.current.isFetchingViewSeconds).toBeTruthy();
         await waitFor(() => {
             expect(result.current.isFetchingViewSeconds).toBeFalsy();
-            expect(result.current.error).toBe('API failure');
+            expect(result.current.fetchViewSecondsError).toBe('API failure');
         });
     });
 });
