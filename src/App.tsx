@@ -8,6 +8,10 @@ function App() {
         shouldFetchInitially: false,
     });
 
+    const renderFetchingIndicator = () => {
+        return <img src={logo} className="App-logo" alt="logo" />;
+    };
+
     const renderResult = () => {
         return <code className="App-view-seconds">{viewSeconds.join(', ')}</code>;
     };
@@ -19,13 +23,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                {isFetchingViewSeconds ? (
-                    <img src={logo} className="App-logo" alt="logo" />
-                ) : error ? (
-                    renderError()
-                ) : (
-                    renderResult()
-                )}
+                {isFetchingViewSeconds ? renderFetchingIndicator() : error ? renderError() : renderResult()}
                 <div
                     className={`App-fetch-btn ${isFetchingViewSeconds && 'App-fetch-btn-disabled'}`}
                     onClick={fetchData}>
