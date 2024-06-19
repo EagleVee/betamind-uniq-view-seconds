@@ -12,7 +12,7 @@ interface UseUniqViewSecondsParams {
 interface UseUniqViewSecondsResult {
     viewSeconds: number[];
     isFetchingViewSeconds: boolean;
-    error: string | null;
+    fetchViewSecondsError: string | null;
     fetchData: () => Promise<void>;
 }
 
@@ -22,31 +22,36 @@ const fetchViewSeconds = async (): Promise<ApiResponse> => {
         throw new Error(`Fetch error status: ${response.status}`);
     }
 
-    const responseJson: ApiResponse = await response.json();
-    return responseJson;
+    return await response.json();
+};
+
+const getUniqueViewSecondsFromResponse = (responseNumbers: number[][]) => {
+    if (!responseNumbers || !responseNumbers.length) return [];
+    const seconds = responseNumbers.flat().filter((n) => typeof n === 'number');
+    const uniqueSeconds = Array.from(new Set(seconds));
+    uniqueSeconds.sort((a, b) => a - b);
+
+    return uniqueSeconds;
 };
 
 function useUniqViewSeconds(params?: UseUniqViewSecondsParams): UseUniqViewSecondsResult {
     const { shouldFetchInitially = false } = params || {};
     const [viewSeconds, setViewSeconds] = useState<number[]>([]);
     const [isFetchingViewSeconds, setIsFetchingViewSeconds] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [fetchViewSecondsError, setFetchViewSecondsError] = useState<string | null>(null);
 
     const fetchData = async () => {
+        if (isFetchingViewSeconds) return;
         try {
-            if (isFetchingViewSeconds) return;
             setIsFetchingViewSeconds(true);
-            setError(null);
+            setFetchViewSecondsError(null);
 
-            const data = await fetchViewSeconds();
-
-            const allSeconds: number[] = data?.numbers?.flat?.() || [];
-            const uniqueSeconds = Array.from(new Set(allSeconds)).filter((e) => typeof e === 'number');
-            uniqueSeconds.sort((a, b) => a - b);
-
+            const response = await fetchViewSeconds();
+            const { numbers = [] } = response || {};
+            const uniqueSeconds = getUniqueViewSecondsFromResponse(numbers);
             setViewSeconds(uniqueSeconds);
-        } catch (error: any) {
-            setError(error.message);
+        } catch (error: unknown) {
+            setFetchViewSecondsError(error instanceof Error ? error.message : 'An unknown error occurred');
         } finally {
             setIsFetchingViewSeconds(false);
         }
@@ -56,7 +61,7 @@ function useUniqViewSeconds(params?: UseUniqViewSecondsParams): UseUniqViewSecon
         shouldFetchInitially && fetchData();
     }, []);
 
-    return { viewSeconds, isFetchingViewSeconds, error, fetchData };
+    return { viewSeconds, isFetchingViewSeconds, fetchViewSecondsError, fetchData };
 }
 
 export default useUniqViewSeconds;

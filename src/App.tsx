@@ -4,7 +4,7 @@ import './App.css';
 import useUniqViewSeconds from './hooks/useUniqViewSeconds';
 
 function App() {
-    const { viewSeconds, error, isFetchingViewSeconds, fetchData } = useUniqViewSeconds({
+    const { viewSeconds, fetchViewSecondsError, isFetchingViewSeconds, fetchData } = useUniqViewSeconds({
         shouldFetchInitially: false,
     });
 
@@ -17,13 +17,17 @@ function App() {
     };
 
     const renderError = () => {
-        return <code className="App-view-seconds">{error}</code>;
+        return <code className="App-view-seconds">{fetchViewSecondsError}</code>;
     };
 
     return (
         <div className="App">
             <header className="App-header">
-                {isFetchingViewSeconds ? renderFetchingIndicator() : error ? renderError() : renderResult()}
+                {isFetchingViewSeconds
+                    ? renderFetchingIndicator()
+                    : fetchViewSecondsError
+                      ? renderError()
+                      : renderResult()}
                 <div
                     className={`App-fetch-btn ${isFetchingViewSeconds && 'App-fetch-btn-disabled'}`}
                     onClick={fetchData}>
