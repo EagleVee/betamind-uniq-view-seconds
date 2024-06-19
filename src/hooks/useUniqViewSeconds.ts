@@ -16,8 +16,10 @@ interface UseUniqViewSecondsResult {
     fetchData: () => Promise<void>;
 }
 
+const API_ENDPOINT = 'https://664ac067a300e8795d42d1ff.mockapi.io/api/v1/numbers/1';
+
 const fetchViewSeconds = async (): Promise<ApiResponse> => {
-    const response = await fetch('https://664ac067a300e8795d42d1ff.mockapi.io/api/v1/numbers/1');
+    const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
         throw new Error(`Fetch error status: ${response.status}`);
     }
