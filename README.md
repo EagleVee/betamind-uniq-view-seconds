@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# BetaMind Unique View Seconds Assignment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is source code for the BetaMind Unique View Seconds assignment, bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
