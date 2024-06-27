@@ -36,6 +36,7 @@ describe('useUniqViewSeconds', () => {
                 numbers: [
                     [1, 2, 3],
                     [3, 4, 5],
+                    [4, 5, 6],
                 ],
             }),
         });
@@ -44,7 +45,7 @@ describe('useUniqViewSeconds', () => {
         expect(result.current.isFetchingViewSeconds).toBeTruthy();
 
         await waitFor(() => {
-            expect(result.current.viewSeconds).toEqual([1, 2, 3, 4, 5]);
+            expect(result.current.viewSeconds).toEqual([1, 2, 3, 4, 5, 6]);
         });
     });
 
